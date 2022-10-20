@@ -35,4 +35,72 @@
 - `tqdm`
 - `ltp`
 
-### [Parameter]
+### Parameter
+For more details: ```config.py```
+```
+  --train_strategy 
+  --batch_size 
+  --batch_size_ke 
+  --batch_size_od 
+  --batch_size_ad 
+  --epoch 
+  --save_model {0,1}
+  --save_pretrain {0,1}
+  --from_pretrain {0,1}
+  --dump_path   Experiment dump path
+  --random_seed 
+  --train_ratio  ratio for train/test
+  --final_mlm_probability 
+  --mlm_probability_increase {linear,curve}
+  --mask_stratege {rand,wwm,domain}
+  --ernie_stratege 
+  --use_mlm_task {0,1}
+  --add_special_word {0,1}
+  --freeze_layer {0,1,2,3,4}
+  --special_token_mask {0,1}
+  --emb_init {0,1}
+  --cls_head_init {0,1}
+  --use_awl {0,1}
+  --mask_loss_scale 
+  --ke_norm 
+  --ke_dim 
+  --ke_margin 
+  --neg_num 
+  --adv_temp    The temperature of sampling in self-adversarial negative sampling.
+  --ke_lr 
+  --only_ke_loss 
+  --use_NumEmb 
+  --contrastive_loss {0,1}
+  --l_layers L_LAYERS
+  --use_kpi_loss
+  --only_test {0,1}
+  --mask_test {0,1}
+  --embed_gen {0,1}
+  --ke_test {0,1}
+  --ke_test_num 
+  --path_gen 
+  --order_load 
+  --order_num 
+  --od_type {linear_cat,vertical_attention}
+  --eps EPS             label smoothing
+  --num_od_layer 
+  --plm_emb_type {cls,last_avg}
+  --order_test_name 
+  --order_threshold 
+  --rank RANK           rank to dist
+  --dist DIST           whether to dist
+  --device DEVICE       device id (i.e. 0 or 0,1 or cpu)
+  --world-size WORLD_SIZE number of distributed processes
+  --dist-url DIST_URL   url used to set up distributed training
+  --local_rank LOCAL_RANK
+```
+
+### Running
+
+- train:
+```bash run.sh```
+- test:
+```bash test.sh```
+
+**Note**: 
+- you can open the `.sh` file for default parameter modification.

@@ -6,19 +6,19 @@
 
 ## Tele-KG
 
-<div align=center><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/TeleKG.png" height="250px"></div>
+<div align=center><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/TeleKG.png" height="220px"></div>
 
 
 ## Model
 <div align=center>
 <center class="half">
-    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/workflow.png" height="230px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/Template.png" height="230px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/numericalEmbedding.png" height="230px"/>
+    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/workflow.png" height="220px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/Template.png" height="220px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/numericalEmbedding.png" height="220px"/>
 </center></div>
 
 ## ANEnc
 <div align=center>
 <center class="half">
-    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/ANEnc.png" height="400px"/>
+    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/ANEnc.png" height="350px"/>
 </center></div>
 
 ## Visualization

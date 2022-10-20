@@ -12,7 +12,7 @@
 ## Model
 <div align=center>
 <center class="half">
-    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/workflow.png" height="220px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/Template.png" height="220px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/numericalEmbedding.png" height="220px"/>
+    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/workflow.png" height="200px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/Template.png" height="200px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/numericalEmbedding.png" height="200px"/>
 </center></div>
 
 ## ANEnc

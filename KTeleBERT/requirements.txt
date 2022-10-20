@@ -1,0 +1,10 @@
+transformers==4.12.2
+tqdm
+torch
+ltp 
+ltp-core 
+ltp-extension
+cycle
+torch>=1.10.0
+easydict
+re

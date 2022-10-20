@@ -28,8 +28,7 @@ class AttenNumeric(nn.Module):
         config.num_kpi = 303
         # config.num_kpi = len(kpi2id)
         # -------------------------------
-        # self.num_attention_heads = config.num_attention_heads
-        # self.attention_head_size = int(config.hidden_size / config.num_attention_heads)  # 96
+
         self.config = config
         self.fc = nn.Linear(1, config.hidden_size)
         # self.actication = nn.ReLU()
@@ -54,28 +53,21 @@ class AttenNumeric(nn.Module):
         hidden_sim = (torch.matmul(hidden, hidden.T) - eye) / 0.07
         kpi = kpi.expand(-1, bs_tmp)
         kpi_sim = torch.abs(kpi - kpi.T) + eye
-        # kpi_sim = eye[torch.min(kpi_sim, 1)[1]].cuda()
         kpi_sim = torch.min(kpi_sim, 1)[1]
-        # pdb.set_trace()
         sc_loss = self.ce_loss(hidden_sim, kpi_sim)
-        # cls_loss = self.ce_loss(hidden_sim, kpi_id)
-        # hidden_sim_ = hidden_sim[:11,:11].cuda()
-        # kpi_sim_ = kpi_sim[:11].cuda()
         return sc_loss
 
     def _encode(self, kpi, query):
         kpi_emb = self.actication(self.fc(kpi))
         # name_emb = self.embedding(query)
         hidden, en_loss, scalar_list = self.encoder(kpi_emb, query)
-        # pdb.set_trace()
+
         # 两个及以下的对比学习没有意义
         if self.config.contrastive_loss and hidden.shape[0] > 2:
             con_loss = self.contrastive_loss(hidden.squeeze(1), kpi.squeeze(1))
-            # pdb.set_trace()
         else:
             con_loss = None
         hidden = self.actication(hidden)
-        # pdb.set_trace()
         assert query.shape[0] > 0
         return hidden, en_loss, scalar_list, con_loss
 
@@ -83,9 +75,6 @@ class AttenNumeric(nn.Module):
         hidden, en_loss, scalar_list, con_loss = self._encode(kpi, query)
         dec_kpi_score, de_loss = self.decoder(kpi, hidden)
         cls_kpi, cls_loss = self.classifier(hidden, kpi_id)
-        # loss_sum = self.loss_awl(de_loss, cls_loss)
-        # return hidden, dec_kpi, cls_kpi
-        # if self.config.contrastive_loss:
         if con_loss is not None:
             # 0.001 * con_loss
             loss_sum = self.loss_awl(de_loss, cls_loss, 0.1 * con_loss)
@@ -96,8 +85,6 @@ class AttenNumeric(nn.Module):
             loss_sum = self.loss_awl(de_loss, cls_loss)
             loss_all = loss_sum + en_loss
             loss_dic = {'cls_loss': cls_loss.item(), 'reg_loss': de_loss.item(), 'orth_loss': en_loss.item()}
-        # pdb.set_trace()
-        # print(self.loss_awl.params)
 
         return dec_kpi_score, cls_kpi, hidden, loss_all, self.loss_awl.params.tolist(), loss_dic, scalar_list
 
@@ -163,6 +150,9 @@ class AttNumLayer(nn.Module):
         self.scalar = nn.Parameter(.3 * torch.ones(1, requires_grad=True))
         self.key = nn.Parameter(torch.empty(self.num_attention_heads, self.attention_head_size))
 
+        self.dense_down = nn.Linear(config.hidden_size, 128)
+        self.dense_up = nn.Linear(128, config.hidden_size)
+
         # name embedding
         self.embedding = nn.Linear(config.hidden_size, self.attention_head_size)
         # num_attention_heads�� value���� ת������k��
@@ -198,7 +188,6 @@ class AttNumLayer(nn.Module):
         # [64, 1, 8, 768]
         value_layer = self.transpose_for_scores(mixed_value_layer)
 
-        # name_emb �� key��
         # key: [8, 96] self.key.transpose(-1, -2): [96, 8]
         # name_emb: [64, 1, 96]
         attention_scores = torch.matmul(name_emb, self.key.transpose(-1, -2))
@@ -211,7 +200,7 @@ class AttNumLayer(nn.Module):
         attention_probs = self.dropout(attention_probs)
         attention_probs = attention_probs.unsqueeze(1)
         # ��Ȩ��value��
-        # [64, 1, 1, 8] * [64, 1, 8, 768] = [64, 1, 8, 96]
+        # [64, 1, 1, 8] * [64, 1, 8, 768] = [64, 1, 1, 768]
         context_layer = torch.matmul(attention_probs, value_layer)
         # context_layer = context_layer.permute(0, 2, 1, 3).contiguous()
         new_context_layer_shape = context_layer.size()[:-2] + (self.config.hidden_size,)
@@ -219,15 +208,11 @@ class AttNumLayer(nn.Module):
         # add & norm
         output_emb = self.dense(context_layer)
         output_emb = self.dropout(output_emb)
-        output_emb = self.LayerNorm(output_emb + self.scalar * kpi_emb)
+        output_emb = self.LayerNorm(output_emb + self.scalar * self.dense_up(self.dense_down(kpi_emb)))
         # output_emb = self.LayerNorm(self.LayerNorm(output_emb) + self.scalar * kpi_emb)
-
         # pdb.set_trace()
         wei = self.value.weight.chunk(8, dim=0)
         orth_loss_value = sum([ortho_penalty(k) for k in wei])
         # 0.01 * ortho_penalty(self.key) + ortho_penalty(self.value.weight)
         orth_loss = 0.0001 * orth_loss_value + 0.0001 * ortho_penalty(self.dense.weight) + 0.01 * ((self.scalar[0])**2).sum()
-        # pdb.set_trace()
-        # if orth_loss.item() < 50:
-        #     pdb.set_trace()
         return output_emb, orth_loss, self.scalar.tolist()[0]

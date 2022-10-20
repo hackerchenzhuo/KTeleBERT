@@ -5,7 +5,6 @@ import torch
 import torch.nn as nn
 import numpy as np
 from random import *
-# from transformers import BertModel, BertTokenizer, BertForMaskedLM
 import json
 from packaging import version
 import torch.distributed as dist
@@ -21,10 +20,7 @@ import torch.nn.functional as F
 
 from copy import deepcopy
 from src.utils import torch_accuracy
-# berttokenizer会自动加[SEP][CLS]
 # 4.21.2
-
-# 序列分类, 对MASK进行分类, 可能对应多个mask
 
 
 def debug(input, kk, begin=None):
@@ -62,16 +58,13 @@ class HWBert(nn.Module):
             if not osp.exists(osp.join(args.data_root, 'transformer', args.model_name)):
                 model_name = 'MacBert'
             self.encoder = BertForMaskedLM.from_pretrained(osp.join(args.data_root, 'transformer', model_name))
-        # TODO: CLS 的分类器用KPI NUM 初始化，KPI NUM直接由文件得到不需要初始化
         self.numeric_model = AttenNumeric(self.args)
 
     # ----------------------- 主forward函数 ----------------------------------
-    # 输入的是训练数据
     def forward(self, input):
         mask_loss, kpi_loss, kpi_loss_weight, kpi_loss_dict = self.mask_forward(input)
         mask_loss = mask_loss.loss
         loss_dic = {}
-        # 不使用KPI
         if not self.args.use_kpi_loss:
             kpi_loss = None
         if kpi_loss is not None:
@@ -108,16 +101,6 @@ class HWBert(nn.Module):
         acc, token_right = torch_accuracy(pred_used, inputs_used, topk)
         # 计算混乱分数
 
-        # x = torch.tensor(list(range(inputs_used.shape[0])))
-        # 得到每一个答案的概率值
-        # func = nn.Softmax(dim=1)
-        # pred_used = func(pred_used)
-        # pro = pred_used[x, inputs_used]
-        # score = torch.prod(pro)
-        # chaos_score = pow(score, 1/pro.shape[0])
-        # acc = [i.item() for i in acc]
-        # pdb.set_trace()
-
         token_num = inputs_used.shape[0]
         # TODO: 添加word_num, word_right
         # token_right：list
@@ -141,7 +124,6 @@ class HWBert(nn.Module):
     # TODO: 垂直注意力考虑：https://github.com/lucidrains/axial-attention
 
     def cls_embedding(self, inputs, tp='cls'):
-        # 修改了bert输出之后返回的是tuple
         hidden_states = self.encoder(
             input_ids=inputs['input_ids'].cuda(),
             attention_mask=inputs['attention_mask'].cuda(),
@@ -149,8 +131,6 @@ class HWBert(nn.Module):
         if tp == 'cls':
             return hidden_states[-1][:, 0]
         else:
-            # PAD 位置不应该参与pooling
-            # [SEP] 也暂不考虑
             index_real = torch.tensor(inputs['input_ids'].clone().detach(), dtype=torch.bool)
             res = []
             for i in range(hidden_states[-1].shape[0]):
@@ -164,7 +144,3 @@ class HWBert(nn.Module):
                     res.append((hidden_states[-1][i][index_real[i]][:-1] + hidden_states[1][i][index_real[i]][:-1]).mean(dim=0))
 
             return torch.stack(res)
-            #
-        # 这里的poolr_output是
-        # pdb.set_trace()
-        # return emb

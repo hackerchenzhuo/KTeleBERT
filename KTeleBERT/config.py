@@ -63,14 +63,10 @@ class cfg():
         parser.add_argument('--accumulation_steps_od', type=int, default=6)
         parser.add_argument("--train_together", default=0, type=int)
 
-
         # 3e-5
         parser.add_argument('--lr', type=float, default=1e-5)
         # 逐层学习率衰减
         parser.add_argument("--LLRD", default=0, type=int, choices=[0, 1])
-        # parser.add_argument('--margin', default=9.0, type=float, help='The fixed margin in loss function. ')
-        # parser.add_argument('--emb_dim', default=1000, type=int, help='The embedding dimension in KGE model.')
-        # parser.add_argument('--adv_temp', default=1.0, type=float, help='The temperature of sampling in self-adversarial negative sampling.')
         parser.add_argument('--weight_decay', type=float, default=0.01)
         parser.add_argument('--clip', type=float, default=1., help='gradient clipping')
         parser.add_argument('--scheduler_steps', type=int, default=None,
@@ -94,11 +90,11 @@ class cfg():
         # 是否mask 特殊token
         parser.add_argument("--special_token_mask", default=0, type=int, choices=[0, 1])
         parser.add_argument("--emb_init", default=1, type=int, choices=[0, 1])
-        parser.add_argument("--cls_head_init", default=1, type=int, choices=[0, 1]) 
+        parser.add_argument("--cls_head_init", default=1, type=int, choices=[0, 1])
         # 是否使用自适应权重
         parser.add_argument("--use_awl", default=1, type=int, choices=[0, 1])
         parser.add_argument("--mask_loss_scale", default=1.0, type=float)
-        
+
         # ------------ KGE ------------
         parser.add_argument('--ke_norm', type=int, default=1)
         parser.add_argument('--ke_dim', type=int, default=768)
@@ -182,7 +178,7 @@ class cfg():
         self.cfg.plm_path = osp.join(self.data_root, 'transformer')
         self.cfg.dump_path = osp.join(self.cfg.data_path, self.cfg.dump_path)
         # bs 控制尽量在32
-        
+
         # 自适应权重的数量
         self.cfg.awl_num = 1
         # ------------ 数值embedding相关 ------------
@@ -193,7 +189,7 @@ class cfg():
         self.cfg.specail_emb_path = None
         if self.cfg.emb_init:
             self.cfg.specail_emb_path = osp.join(self.cfg.data_path, 'added_vocab_embedding.pt')
-        
+
         # ------------- 多任务学习相关 -------------
         # 四个阶段
         self.cfg.mask_epoch, self.cfg.ke_epoch, self.cfg.ad_epoch, self.cfg.od_epoch = None, None, None, None
@@ -222,11 +218,11 @@ class cfg():
                 self.cfg.batch_size_ke = int(self.cfg.batch_size_ke / self.cfg.train_strategy) - 2
                 self.cfg.batch_size_ad = int(self.cfg.batch_size_ad / self.cfg.train_strategy) - 1
                 self.cfg.batch_size_od = int(self.cfg.batch_size_od / self.cfg.train_strategy) - 1
-                self.cfg.accumulation_steps = (self.cfg.accumulation_steps-1) * self.cfg.train_strategy
+                self.cfg.accumulation_steps = (self.cfg.accumulation_steps - 1) * self.cfg.train_strategy
 
         self.cfg.neg_num = max(min(self.cfg.neg_num, self.cfg.batch_size_ke - 3), 1)
 
-        self.cfg.accumulation_steps_dict = {0:self.cfg.accumulation_steps, 1:self.cfg.accumulation_steps_ke, 2:self.cfg.accumulation_steps_ad, 3:self.cfg.accumulation_steps_od }
+        self.cfg.accumulation_steps_dict = {0: self.cfg.accumulation_steps, 1: self.cfg.accumulation_steps_ke, 2: self.cfg.accumulation_steps_ad, 3: self.cfg.accumulation_steps_od}
 
         # 使用数值embedding也必须添加新词因为位置信息和tokenizer绑定
         if self.cfg.use_mlm_task or self.cfg.use_NumEmb:

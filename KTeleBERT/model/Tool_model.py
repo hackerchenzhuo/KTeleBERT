@@ -4,6 +4,8 @@ import torch
 from torch import nn
 
 # https://github.com/Mikoto10032/AutomaticWeightedLoss/blob/master/AutomaticWeightedLoss.py
+
+
 class AutomaticWeightedLoss(nn.Module):
     # '''
     # automatically weighted multi-task loss
@@ -24,8 +26,6 @@ class AutomaticWeightedLoss(nn.Module):
         else:
             params = torch.ones(num, requires_grad=False)
             self.params = torch.nn.Parameter(params, requires_grad=False)
-            
-        
 
     def forward(self, *x):
         loss_sum = 0

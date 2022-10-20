@@ -19,6 +19,7 @@ import math
 from src.utils import Loss_log, time_trans
 from collections import defaultdict
 
+
 class cfg():
     def __init__(self):
         self.this_dir = osp.dirname(__file__)
@@ -117,38 +118,21 @@ def cws(seq_data, add_words, batch_size):
         # pdb.set_trace()
         error_data = []
         for i in range(size):
-            # pdb.set_trace()
-            # segment, _ = ltp.seg(seq_data[b:e])
-            # seq_data_cws.extend(segment)
-            # case
-            # lll = "[CLS]  [ENT] name | 1914308298 用户平面UPF发送下行用户面IPv6报文峰值包速率 [ATTR] product | UDG [ATTR] typeName | Info_Measure [ATTR] labels | UDG,event [ATTR] alias | 1914308298 用户平面UPF发送下行用户面IPv6报文峰值包速率;1914308298;用户平面UPF发送下行用户面IPv6报文峰值包速率 [SEP]"
-            # segment, _ = ltp.seg([lll])
-            # _output = ltp.pipeline([lll], tasks=["cws"])
 
             output = []
             try:
                 _output = ltp.pipeline(seq_data[b:e], tasks=["cws"])
-                # ltp_debug(ltp, _output.cws[:25])
-            # 把分词再细分一下
-            # 目的： 为了防止出现 special token和一些普通词被分到一起的情况
                 for data in _output.cws:
                     try:
                         data_out = ltp.pipeline(data, tasks=["cws"])
                         # data_out_ = reduce(lambda x, y: x.extend(y) or x, data_out.cws)
                         data_out_ = []
                         for i in data_out.cws:
-                            
-                            # assert len(i)  == 1
-                            # 保留空格的话需要手动去除空格
-                            # data_out_.append(i[0].strip())
-                            # 之前没有空格
                             data_out_.extend([k.strip() for k in i])
                         output.append(data_out_)
                     except:
-                        # print(f"二阶段分词出错！内容是:{data}")
                         print(f"二阶段分词出错！范围是：[{b}]-[{e}]")
                         error_data.append(data)
-                        
 
             # pdb.set_trace()
             except:
@@ -166,15 +150,11 @@ def cws(seq_data, add_words, batch_size):
                 e = data_size
             _tqdm.set_description(f'from {b} to {e}:')
             _tqdm.update(1)
-    # 使用list、格式作为返回结果
 
-    # pdb.set_trace()
-    # assert len(seq_data_cws) == data_size
     print(f"过滤了{data_size - len(seq_data_cws)}个句子")
-    # print(all_segment)  # print(output[0]) / print(output['cws']) # 也可以使用下标访问
-
 
     return seq_data_cws, data_size, error_data
+
 
 def ltp_debug(ltp, op):
     output = []
@@ -189,7 +169,7 @@ def ltp_debug(ltp, op):
             # data_out_.extend(i)
         output.append(data_out_)
     return output
-    # return [ltp.pipeline(data, tasks=["cws"]) for data in op]
+
 
 def deal_sub_words(subwords, special_token):
     '''
@@ -229,13 +209,8 @@ def generate_chinese_ref(seq_data_cws, special_token, deal_numeric, kpi_dic):
         not_in_KPI = defaultdict(int)
         for i in range(data_size):
             _tqdm.set_description(f'checking...[{i}/{data_size}] max len: [{max_len}]')
-            # orig = tokenizer.tokenize(seq_data[i])
-
-            # 把['KPI', '异常', '下降'] 变成 'KPI' '异常' '下降'
             orig = tokenizer.tokenize(" ".join(seq_data_cws[i]))
 
-            # 数值处理：把KPI token的位置，NUM token 的位置确定，用元组的形式存储[[(1,2,4),(5,6,7)], [...], ...]
-            # 希望得到的位置信息是分词之后的token位置信息，
             if deal_numeric:
                 # 得到元组信息，前两位是KPI下标范围
                 _kpi_info, kpi_type_list = extract_kpi(orig, kpi_dic, not_in_KPI)
@@ -245,8 +220,6 @@ def generate_chinese_ref(seq_data_cws, special_token, deal_numeric, kpi_dic):
             sub_total = []
             ww_seq_tmp = []
             ww_tmp = []
-            # 分词之后的一条数据
-            # 中的每一个whole word
             for sub_data in seq_data_cws[i]:
                 sub = tokenizer.tokenize(sub_data)
                 sub_total.extend(sub)
@@ -341,7 +314,7 @@ def extract_kpi(token_data, kpi_dic, not_in_KPI):
         # (kpi 开始，kpi 结束，NUM token位置)
         # DONE: 添加KPI的类别
         kpi_name = ''.join(token_data[kpi_index[i] + 1: num_index[i] - 1])
-        kpi_name_clear = kpi_name.replace('##' , '')
+        kpi_name_clear = kpi_name.replace('##', '')
 
         if kpi_name in kpi_dic:
             kpi_id = int(kpi_dic[kpi_name])
@@ -360,7 +333,7 @@ def extract_kpi(token_data, kpi_dic, not_in_KPI):
         kpi_and_num_info.append(kpi_info)
         kpi_type.append(kpi_id)
     # pdb.set_trace()
-    
+
     return kpi_and_num_info, kpi_type
 
 
@@ -408,32 +381,21 @@ if __name__ == '__main__':
     # 供测试
     random.shuffle(seq_data)
     # seq_data = seq_data[:500]
-
-    # 自定义的一些特殊token，更新tokenizer
-    # 这个程序是和tokenizer配套的，如果tokenizer更新了（e.g. 加入了special token，则也需要配套更新数据）
     print(f"tokenizer size before: {len(tokenizer)}")
     tokenizer, special_token, norm_token = add_special_token(tokenizer)
     special_token = special_token + norm_token
 
-    # special 分词词表更新（在自定义token的基础上）,
-    # 加入分词系统（不用基于词组的mask，而是把高频词加入分词系统）
     print(f"tokenizer size after: {len(tokenizer)}")
     print('------------------------ refresh data --------------------------------')
     add_words = refresh_data(ref, cfgs.freq, special_token)
 
-    # 得到分词
-    # 先（载入词表）进行分词，变成[[...],[...],[...], ...]
-
     if not cfgs.read_cws:
         print('------------------------ cws ----------------------------------')
         seq_data_cws, data_size, error_data = cws(seq_data, add_words, cfgs.batch_size)
-        # print(f'batch size is {cfgs.batch_size}, time using：{time() - start_time}')
         print(f'batch size is {cfgs.batch_size}')
-        if len(error_data)>0:
+        if len(error_data) > 0:
             with open(osp.join(cfgs.data_path, f'{seq_data_name}_error.json'), "w") as fp:
                 json.dump(error_data, fp, ensure_ascii=False)
-        
-        # 合并之前保留数值数据的cws文件
         save_path_cws_orig = osp.join(cfgs.data_path, f'{seq_data_name}_cws_orig.json')
         print("get the new training data! saving...")
         with open(save_path_cws_orig, 'w', ) as fp:
@@ -446,19 +408,15 @@ if __name__ == '__main__':
             seq_data_cws = json.load(fp)
         data_size = len(seq_data_cws)
 
-
-    # 对数值数据单独处理
-    # 只提取数值
     sz_orig = len(seq_data_cws)
     if cfgs.deal_numeric:
         seq_data_cws, num_ref = extract_num(seq_data_cws)
     print(f"过滤了{sz_orig - len(seq_data_cws)}个无效句子")
     data_size = len(seq_data_cws)
-    # 根据前面分好词的内容，得到chinese_ref，后续可以输入语言模型中作为wwm分词依据
-    # special_token不参与 mask，所以自然不会被考虑
+
     print('---------------------- generate chinese ref ------------------------------')
     chinese_ref, kpi_info, sten_that_over_maxl = generate_chinese_ref(seq_data_cws, special_token, cfgs.deal_numeric, kpi_dic)
-    # 保存长度超过500的句子
+
     if len(sten_that_over_maxl) > 0:
         print(f"{len(sten_that_over_maxl)} over the 500 len!")
         save_path_max = osp.join(cfgs.data_path, f'{seq_data_name}_max_len_500.json')
@@ -477,15 +435,11 @@ if __name__ == '__main__':
         json.dump(chinese_ref, fp, ensure_ascii=False)
     print(f"save chinese_ref done!")
 
-    # 使用空格把数据重新合并回去, 变成 ['KPI 异常 下降', 'KPI 异常 上升'] 的形式
     seq_data_cws_output = []
     for i in range(data_size):
         seq = " ".join(seq_data_cws[i])
         seq_data_cws_output.append(seq)
 
-    # 输出最后训练的时候用于帮助wwm的配套训练语料
-    # 直接替换原语料
-    # assert len(seq_data_cws_output) == len(seq_data)
     save_path_cws = osp.join(cfgs.data_path, f'{seq_data_name}_cws.json')
     print("get the new training data!")
     with open(save_path_cws, 'w', ) as fp:
@@ -494,24 +448,7 @@ if __name__ == '__main__':
     print("save seq_data_cws done!")
 
     if cfgs.deal_numeric:
-        # save
-        # kpi_save_path = osp.join(cfgs.data_path, f'{seq_data_name}_kpi_info.json')
-        # with open(kpi_save_path, 'w', ) as fp:
-        #         json.dump(kpi_info, fp, ensure_ascii=False)
-
-        # num_save_path = osp.join(cfgs.data_path, f'{seq_data_name}_num_ref.json')
-        # with open(num_save_path, 'w', ) as fp:
-        #         json.dump(num_ref, fp, ensure_ascii=False)
-        # save_path = osp.join(cfgs.data_path, f'{seq_data_name}.json')
-        # with open(save_path, 'w', ) as fp:
-        #         json.dump(seq_data, fp, ensure_ascii=False)
         kpi_ref_path = osp.join(cfgs.data_path, f'{seq_data_name}_kpi_ref.json')
         with open(kpi_ref_path, 'w', ) as fp:
             json.dump(kpi_ref, fp, ensure_ascii=False)
         print("save num and kpi done!")
-
-    # tokenizer.tokenize(seq_data[0])
-        # tokenizer(seq_data_cws[0])
-        # 然后对词list里面的每个内容进行tokenizer，同时对整体tokenizer
-        # assert list元素数量 == 整体tokenizer后长度
-        # 得到 cand_indexes：可能参与分词的下标

@@ -66,13 +66,7 @@ class Runner:
             self.od_model = self._load_model(self.od_model, f"od_{self.args.model_name}")
             self.ke_model = self._load_model(self.ke_model, f"ke_{self.args.model_name}")
             # TODO: 异常检测
-            
-        # if rank != 0:
-        #     dist.barrier()
-        # else:
-        #     pdb.set_trace()
-        #     dist.barrier()
-            
+
         # 测试的情况
         if self.args.only_test:
             self.dataloader_init(self.seq_test_set)
@@ -87,13 +81,6 @@ class Runner:
                 self.model_sync()
             else:
                 self.model_list = [model for model in [self.model, self.od_model, self.ke_model] if model is not None]
-            
-            # 优化器初始化
-            # if rank != 0:
-            #     dist.barrier()
-            # else:
-            #     pdb.set_trace()
-            #     dist.barrier()
 
             self.optim_init(self.args)
 
@@ -130,7 +117,7 @@ class Runner:
         # 占总step 10% 的warmup_steps
         opt.total_steps = int(step_per_epoch * opt.epoch) if total_step is None else int(total_step)
         opt.warmup_steps = int(opt.total_steps * 0.15)
-        
+
         if self.rank == 0 and total_step is None:
             self.logger.info(f"warmup_steps: {opt.warmup_steps}")
             self.logger.info(f"total_steps: {opt.total_steps}")
@@ -145,7 +132,7 @@ class Runner:
         self.seq_train_set, self.seq_test_set, self.kg_train_set, self.kg_data = None, None, None, None
         self.order_train_set, self.order_test_set = None, None
 
-        if self.args.train_strategy >= 1 and self.args.train_strategy <=4:
+        if self.args.train_strategy >= 1 and self.args.train_strategy <= 4:
             # 预训练 or multi task pretrain
             self.seq_train_set, self.seq_test_set, train_test_split = load_data(self.logger, self.args)
             if self.args.train_strategy >= 2:
@@ -155,13 +142,10 @@ class Runner:
                 pass
             if self.args.train_strategy >= 4:
                 self.order_train_set, self.order_test_set, train_test_split = load_order_data(self.logger, self.args)
-        
-
-            
 
         if self.args.dist and not self.args.only_test:
             # 测试不需要并行
-            if self.args.train_strategy >= 1 and self.args.train_strategy <=4:
+            if self.args.train_strategy >= 1 and self.args.train_strategy <= 4:
                 self.seq_train_sampler = torch.utils.data.distributed.DistributedSampler(self.seq_train_set)
                 if self.args.train_strategy >= 2:
                     self.kg_train_sampler = torch.utils.data.distributed.DistributedSampler(self.kg_train_set)
@@ -170,7 +154,6 @@ class Runner:
                     pass
                 if self.args.train_strategy >= 4:
                     self.order_train_sampler = torch.utils.data.distributed.DistributedSampler(self.order_train_set)
-
 
             # self.seq_train_batch_sampler = torch.utils.data.BatchSampler(self.seq_train_sampler, self.args.batch_size, drop_last=True)
             # self.kg_train_batch_sampler = torch.utils.data.BatchSampler(self.kg_train_sampler, int(self.args.batch_size / 4), drop_last=True)
@@ -279,7 +262,7 @@ class Runner:
     def task_switch(self, training_strategy):
         # 同时训练或者策略1训练不需要切换任务，epoch也安装初始epoch就行
         if training_strategy == 1 or self.args.train_together:
-            return (0,0), None
+            return (0, 0), None
 
         # 4 阶段
         # self.total_epoch -= 1
@@ -288,8 +271,7 @@ class Runner:
             for task in range(training_strategy):
                 if self.args.epoch_matrix[task][i] > 0:
                     self.args.epoch_matrix[task][i] -= 1
-                    return (task, i), self.args.epoch_matrix[task][i]+1
-
+                    return (task, i), self.args.epoch_matrix[task][i] + 1
 
     def run(self):
         self.loss_log = Loss_log()
@@ -332,7 +314,7 @@ class Runner:
                     # task 转换状态时需要重新初始化优化器
                     # 并行训练或者单一task (0) 训练不需要切换opti
                     if task_epoch is not None:
-                        self.optim_init(self.args, total_step=len(dataloader)*task_epoch, accumulation_step=self.args.accumulation_steps_dict[task])
+                        self.optim_init(self.args, total_step=len(dataloader) * task_epoch, accumulation_step=self.args.accumulation_steps_dict[task])
                         task_last = task
                         stage_last = stage
 
@@ -384,9 +366,9 @@ class Runner:
         if task == 0:
             # 输出
             _output = self.model(batch)
-            loss = _output['loss'] 
+            loss = _output['loss']
         elif task == 1:
-            loss = self.ke_model(batch, self.model) 
+            loss = self.ke_model(batch, self.model)
         elif task == 2:
             pass
         elif task == 3:
@@ -568,11 +550,11 @@ class Runner:
         for step, batch in enumerate(self.train_dataloader):
             for tp in tps:
                 with torch.no_grad():
-                    batch_embedding = self.model.cls_embedding(batch,  tp=tp)
+                    batch_embedding = self.model.cls_embedding(batch, tp=tp)
                     # batch_embedding = self.model.cls_embedding(batch, tp=tp)
                     if tp in self.args.model_name and self.ke_model is not None:
                         batch_embedding_ent = self.ke_model.get_embedding(batch_embedding, is_ent=True)
-                        # batch_embedding_ent = self.ke_model(batch, self.model) 
+                        # batch_embedding_ent = self.ke_model(batch, self.model)
                         batch_embedding_ent = batch_embedding_ent.cpu()
                         all_emb_ent.append(batch_embedding_ent)
 
@@ -663,9 +645,9 @@ class Runner:
                         add_special_tokens=False
                     )
 
-                    batch_emb = self.model.cls_embedding(batch,  tp=self.args.plm_emb_type)
+                    batch_emb = self.model.cls_embedding(batch, tp=self.args.plm_emb_type)
                     batch_emb = self.ke_model.get_embedding(batch_emb, is_ent=True)
-                    
+
                     ent_emb.append(batch_emb.cpu())
                     _tqdm.update(1)
                     step += 1
@@ -684,7 +666,7 @@ class Runner:
                         return_attention_mask=True,
                         add_special_tokens=False
                     )
-                    batch_emb = self.model.cls_embedding(batch,  tp=self.args.plm_emb_type)
+                    batch_emb = self.model.cls_embedding(batch, tp=self.args.plm_emb_type)
                     batch_emb = self.ke_model.get_embedding(batch_emb, is_ent=False)
                     # batch_emb = self.model.get_embedding(batch, is_ent=False)
                     rel_emb.append(batch_emb.cpu())
@@ -822,10 +804,6 @@ if __name__ == '__main__':
         # 下面这条语句在并行的时候可能内存泄漏，导致无法停止
         torch.multiprocessing.set_sharing_strategy('file_system')
     rank = cfgs.rank
-
-    # print(f'cfgs.local_rank{cfgs.local_rank}')
-    # print(f'cfgs.device{cfgs.device}')
-    # torch.cuda.set_device(cfgs.device)
 
     writer, logger = None, None
     if rank == 0:

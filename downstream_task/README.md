@@ -48,20 +48,33 @@ The model of fault chain tracing is implemented with PyTorch and framework Neura
 
 ## Workflow
 
-
+<div align=center>
+<center class="half">
+    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/Event%20Association%20Prediction.png" height="350px"/>
+</center></div>
 
 ## Usage
 
 ### Requirements
 
+- `torch`
+- `sklearn`
+- `tqdm`
 
 ### Parameter
+
+- EPOCH = 15
+- TEXT_DIM = 768
+- NODE_NUM = 32
+- NODE_DIM = 16
+- TIME_DIM = 4
+- BATCH_SIZE = 64
+- LR = 0.001
+- SEED = 2022
+- N_FOLD= 5
 
 
 ### Running
 
-- train and test:
-
-
-**Note**: 
+- train & test `python run_downstream.py`
 

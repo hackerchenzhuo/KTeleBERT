@@ -42,3 +42,27 @@ sh scripts/Network/GTransE_Net_filter.sh
 
 **Note**: 
 The model of fault chain tracing is implemented with PyTorch and framework NeuralKG.
+
+
+# Event Association Prediction
+
+## Workflow
+
+
+
+## Usage
+
+### Requirements
+
+
+### Parameter
+
+```
+
+### Running
+
+- train and test:
+
+
+**Note**: 
+

@@ -91,14 +91,26 @@ The model of fault chain tracing is implemented with PyTorch and framework Neura
 
 ### Requirements
 
+- `torch == 1.12.0`
+- `numpy == 1.22.3`
+- `dgl == 0.8.2`
 
 
 ### Parameter
 
-
+- num_fold = 5
+- use_rule = 'count'
+- withAttr = 'True
+- num_epoch = 1000
+- nlayer = 2
+- train_bs = 99
+- lr = 0.001
+- early_stop_patience = 30
 
 
 ### Running
 
 - train & test ``
 
+```bash
+bash run.sh

@@ -57,7 +57,6 @@ The model of fault chain tracing is implemented with PyTorch and framework Neura
 
 ### Parameter
 
-```
 
 ### Running
 

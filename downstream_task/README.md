@@ -78,3 +78,27 @@ The model of fault chain tracing is implemented with PyTorch and framework Neura
 
 - train & test `python run_downstream.py`
 
+# Root Cause Analysis
+
+## Workflow
+
+<div align=center>
+<center class="half">
+    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/Root%20Cause%20Analysis.png" height="350px"/>
+</center></div>
+
+## Usage
+
+### Requirements
+
+
+
+### Parameter
+
+
+
+
+### Running
+
+- train & test ``
+

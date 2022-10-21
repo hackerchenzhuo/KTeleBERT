@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # from torch._C import T
 # from train import Trainer
-import sys
-sys.path.append('./src')
 import pytorch_lightning as pl
 from pytorch_lightning import seed_everything
 from IPython import embed
@@ -14,7 +12,7 @@ from neuralkg.data.Grounding import GroundAllRules
 
 
 def main(arg):
-    parser = setup_parser() #设置参数
+    parser = setup_parser()
     args = parser.parse_args()
     if args.load_config:
         args = load_config(args, args.config_path)
@@ -25,10 +23,10 @@ def main(arg):
     args.max_epochs = 5000
     args.lr = 1e-5
     seed_everything(args.seed) 
-    """set up sampler to datapreprocess""" #设置数据处理的采样过程
+    """set up sampler to datapreprocess"""
     
     if args.init_checkpoint:
-        override_config(args) #TODO: 设置checkpoint自动载入
+        override_config(args) 
     elif args.data_path is None :
         raise ValueError('one of init_checkpoint/data_path must be choosed.')
 
@@ -46,12 +44,12 @@ def main(arg):
     logging.info("++++++++++++++++++++++++++++++++over loading+++++++++++++++++++++++++++++++")
 
     train_sampler_class = import_class(f"neuralkg.data.{args.train_sampler_class}")
-    train_sampler = train_sampler_class(args)  # 这个sampler是可选择的
+    train_sampler = train_sampler_class(args)
     #print(train_sampler)
     test_sampler_class = import_class(f"neuralkg.data.{args.test_sampler_class}")
-    test_sampler = test_sampler_class(train_sampler)  # test_sampler是一定要的
-    """set up datamodule""" #设置数据模块
-    data_class = import_class(f"neuralkg.data.{args.data_class}") #定义数据类 DataClass
+    test_sampler = test_sampler_class(train_sampler)
+    """set up datamodule"""
+    data_class = import_class(f"neuralkg.data.{args.data_class}")
     kgdata = data_class(args, train_sampler, test_sampler)
     """set up model"""
     model_class = import_class(f"neuralkg.model.{args.model_name}")
@@ -85,8 +83,7 @@ def main(arg):
         check_on_train_epoch_end=False,
     )
     """set up model save method"""
-    # 目前是保存在验证集上mrr结果最好的模型
-    # 模型保存的路径
+
     dirpath = "/".join(["output", args.eval_task, args.dataset_name, args.model_name])
     model_checkpoint = pl.callbacks.ModelCheckpoint(
         monitor="Eval|mrr",
@@ -97,7 +94,7 @@ def main(arg):
         save_top_k=1,
     )
     callbacks = [early_callback, model_checkpoint]
-    # initialize trainer
+
     if args.model_name == "IterE":
 
         trainer = pl.Trainer.from_argparse_args(
@@ -126,7 +123,7 @@ def main(arg):
     if not args.test_only:
         # train&valid
         trainer.fit(lit_model, datamodule=kgdata)
-        # 加载本次实验中dev上表现最好的模型，进行test
+
         path = model_checkpoint.best_model_path
     else:
         path = args.checkpoint_dir

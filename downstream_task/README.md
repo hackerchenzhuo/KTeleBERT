@@ -110,7 +110,7 @@ The model of fault chain tracing is implemented with PyTorch and framework Neura
 
 ### Running
 
-- train & test ``
+- train & test
 
 ```bash
 bash run.sh

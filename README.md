@@ -1,6 +1,6 @@
 # KTeleBERT
 ![](https://img.shields.io/badge/version-1.0.0-blue)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)]()
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/hackerchenzhuo/KTeleBERT/blob/main/licence)
 
 [*Tele-Knowledge Pre-training for Fault Analysis*](https://arxiv.org/abs/2210.11298)
 

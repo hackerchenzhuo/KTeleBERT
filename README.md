@@ -1,6 +1,6 @@
 # KTeleBERT
 
-[*Tele-Knowledge Pre-training for Fault Analysis*]()
+[*Tele-Knowledge Pre-training for Fault Analysis*](https://arxiv.org/abs/2210.11298)
 
 >Author: Zhuo Chen†, Wen Zhang†, Yufeng Huang, Mingyang Chen,Yuxia Geng, Hongtao Yu, Zhen Bi, Yichi Zhang, Zhen Yao, Huajun Chen (College of Computer Science, **Zhejiang University**)
 Wenting Song, Xinliang Wu, Yi Yang, Song Jiang, Zhaoyang Lian, Yingying Li (NAIE PDU, **Huawei Technologies** Co., Ltd.)

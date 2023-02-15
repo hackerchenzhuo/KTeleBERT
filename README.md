@@ -8,9 +8,9 @@
 >Author: Zhuo Chen†, Wen Zhang†, Yufeng Huang, Mingyang Chen,Yuxia Geng, Hongtao Yu, Zhen Bi, Yichi Zhang, Zhen Yao, Huajun Chen (College of Computer Science, **Zhejiang University**)
 Wenting Song, Xinliang Wu, Yi Yang, Song Jiang, Zhaoyang Lian, Yingying Li (NAIE PDU, **Huawei Technologies** Co., Ltd.)
 >In this paper we propose a tele-domain pre-trained language model named **TeleBERT** to learn the general semantic knowledge in the telecommunication field together with its improved version **KTeleBERT**, which incorporates those implicit information in machine log data and explicit knowledge contained in our Tele-product Knowledge Graph (Tele-KG).
-## Tele-KG
+## Tele-data
 
-<div align=center><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/TeleKG.png" height="220px"></div>
+<div align=center><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/TeleKG.png" height="440px"></div>
 
 
 ## Workflow
@@ -26,9 +26,16 @@ Wenting Song, Xinliang Wu, Yi Yang, Song Jiang, Zhaoyang Lian, Yingying Li (NAIE
 </center></div>
 
 ## Visualization
+- **Visualization for Numerical Data**
 <div align=center>
 <center class="half">
     <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/vis.png" height="250px"/>
+</center></div>
+
+- **Visualization for Abnormal Detection Data**
+<div align=center>
+<center class="half">
+    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/ad vis.png" height="500px"/>
 </center></div>
 
 ## Usage

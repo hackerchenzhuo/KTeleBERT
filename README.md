@@ -32,7 +32,7 @@ Wenting Song, Xinliang Wu, Yi Yang, Song Jiang, Zhaoyang Lian, Yingying Li (NAIE
     <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/vis.png" height="250px"/>
 </center></div>
 
-- **Visualization for Abnormal Detection Data**
+- **Visualization for Abnormal KPI Detection Data**
 <div align=center>
 <center class="half">
     <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/ad vis.png" height="500px"/>

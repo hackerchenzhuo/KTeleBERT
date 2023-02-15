@@ -118,3 +118,12 @@ python run_downstream.py
 ```bash
 bash run.sh
 ```
+
+# Abnormal KPI Detection
+
+## Workflow
+
+<div align=center>
+<center class="half">
+    <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/abnormal detection.png" height="350px"/>
+</center></div>

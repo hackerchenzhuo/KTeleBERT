@@ -2,30 +2,31 @@
 ![](https://img.shields.io/badge/version-1.0.0-blue)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/hackerchenzhuo/KTeleBERT/blob/main/licence)
 [![arxiv badge](https://img.shields.io/badge/arxiv-2210.11298-red)](https://arxiv.org/abs/2210.11298)
+[![ICDE2023](https://img.shields.io/badge/ICDE-2023-%23f1592a?labelColor=%23f1592a&color=%23ffffff)](https://ieeexplore.ieee.org/document/10184605)
 
-[*Tele-Knowledge Pre-training for Fault Analysis*](https://arxiv.org/abs/2210.11298)
+[*Tele-Knowledge Pre-training for Fault Analysis*](https://ieeexplore.ieee.org/document/10184605)
 
 >Author: Zhuo Chen†, Wen Zhang†, Yufeng Huang, Mingyang Chen,Yuxia Geng, Hongtao Yu, Zhen Bi, Yichi Zhang, Zhen Yao, Huajun Chen (College of Computer Science, **Zhejiang University**)
 Wenting Song, Xinliang Wu, Yi Yang, Mingyi Chen, Zhaoyang Lian, Yingying Li, Lei Cheng (NAIE PDU, **Huawei Technologies** Co., Ltd.)
 >In this paper we propose a tele-domain pre-trained language model named **TeleBERT** to learn the general semantic knowledge in the telecommunication field together with its improved version **KTeleBERT**, which incorporates those implicit information in machine log data and explicit knowledge contained in our Tele-product Knowledge Graph (Tele-KG).
-## Tele-data
+## 📚 Tele-data
 
 <div align=center><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/TeleKG.png" height="440px"></div>
 
 
-## Workflow
+## 🔬 Workflow
 <div align=center>
 <center class="half">
     <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/workflow.png" height="200px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/Template.png" height="200px"/><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/numericalEmbedding.png" height="200px"/>
 </center></div>
 
-## ANEnc
+## 🧵 ANEnc
 <div align=center>
 <center class="half">
     <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/ANEnc.png" height="350px"/>
 </center></div>
 
-## Visualization
+## 🔎 Visualization
 - **Visualization for Numerical Data**
 <div align=center>
 <center class="half">
@@ -38,7 +39,7 @@ Wenting Song, Xinliang Wu, Yi Yang, Mingyi Chen, Zhaoyang Lian, Yingying Li, Lei
     <img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/ad vis.png" height="500px"/>
 </center></div>
 
-## Usage
+## 🚀 Usage
 
 ### Requirements
 - `transformers >= 4.21.2`
@@ -118,5 +119,21 @@ For more details: ```config.py```
 
 **Note**: 
 - you can open the `.sh` file for default parameter modification.
+
+### 🤝 Cite:
+Please condiser citing this paper if you use the ```code``` from our work.
+Thanks a lot :)
+
+```bigquery
+@INPROCEEDINGS{10184605,
+  author={Chen, Zhuo and Zhang, Wen and Huang, Yufeng and Chen, Mingyang and Geng, Yuxia and Yu, Hongtao and Bi, Zhen and Zhang, Yichi and Yao, Zhen and Song, Wenting and Wu, Xinliang and Yang, Yi and Chen, Mingyi and Lian, Zhaoyang and Li, Yingying and Cheng, Lei and Chen, Huajun},
+  booktitle={2023 IEEE 39th International Conference on Data Engineering (ICDE)}, 
+  title={Tele-Knowledge Pre-training for Fault Analysis}, 
+  year={2023},
+  volume={},
+  number={},
+  pages={3453-3466},
+  doi={10.1109/ICDE55515.2023.00265}}
+```
 
 <a href="https://info.flagcounter.com/VOlE"><img src="https://s11.flagcounter.com/count2/VOlE/bg_FFFFFF/txt_000000/border_F7F7F7/columns_6/maxflags_12/viewers_3/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0"></a>

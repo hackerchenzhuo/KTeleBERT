@@ -125,15 +125,30 @@ Please condiser citing this paper if you use the ```code``` from our work.
 Thanks a lot :)
 
 ```bigquery
-@INPROCEEDINGS{10184605,
-  author={Chen, Zhuo and Zhang, Wen and Huang, Yufeng and Chen, Mingyang and Geng, Yuxia and Yu, Hongtao and Bi, Zhen and Zhang, Yichi and Yao, Zhen and Song, Wenting and Wu, Xinliang and Yang, Yi and Chen, Mingyi and Lian, Zhaoyang and Li, Yingying and Cheng, Lei and Chen, Huajun},
-  booktitle={2023 IEEE 39th International Conference on Data Engineering (ICDE)}, 
-  title={Tele-Knowledge Pre-training for Fault Analysis}, 
-  year={2023},
-  volume={},
-  number={},
-  pages={3453-3466},
-  doi={10.1109/ICDE55515.2023.00265}}
+@inproceedings{DBLP:conf/icde/00070HCGYBZYSWY23,
+  author       = {Zhuo Chen and
+                  Wen Zhang and
+                  Yufeng Huang and
+                  Mingyang Chen and
+                  Yuxia Geng and
+                  Hongtao Yu and
+                  Zhen Bi and
+                  Yichi Zhang and
+                  Zhen Yao and
+                  Wenting Song and
+                  Xinliang Wu and
+                  Yi Yang and
+                  Mingyi Chen and
+                  Zhaoyang Lian and
+                  Yingying Li and
+                  Lei Cheng and
+                  Huajun Chen},
+  title        = {Tele-Knowledge Pre-training for Fault Analysis},
+  booktitle    = {{ICDE}},
+  pages        = {3453--3466},
+  publisher    = {{IEEE}},
+  year         = {2023}
+}
 ```
 
 <a href="https://info.flagcounter.com/VOlE"><img src="https://s11.flagcounter.com/count2/VOlE/bg_FFFFFF/txt_000000/border_F7F7F7/columns_6/maxflags_12/viewers_3/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" border="0"></a>

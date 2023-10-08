@@ -10,6 +10,7 @@
 Wenting Song, Xinliang Wu, Yi Yang, Mingyi Chen, Zhaoyang Lian, Yingying Li, Lei Cheng (NAIE PDU, **Huawei Technologies** Co., Ltd.)
 >In this paper we propose a tele-domain pre-trained language model named **TeleBERT** to learn the general semantic knowledge in the telecommunication field together with its improved version **KTeleBERT**, which incorporates those implicit information in machine log data and explicit knowledge contained in our Tele-product Knowledge Graph (Tele-KG).
 ## 📚 Tele-data
+- **The data examples are available [`here`](https://github.com/hackerchenzhuo/KTeleBERT/blob/main/Dataset/Data4KTeleBERT.zip). Considering the sensitivity of some data, we cannot publish all of them.**
 
 <div align=center><img src="https://github.com/hackerchenzhuo/KTeleBERT/blob/main/figures/TeleKG.png" height="440px"></div>
 

@@ -4,7 +4,6 @@ torch
 ltp 
 ltp-core 
 ltp-extension
-cycle
 torch>=1.10.0
 easydict
 re
